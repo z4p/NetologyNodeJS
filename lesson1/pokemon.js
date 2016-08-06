@@ -19,6 +19,16 @@ class Pokemon {
 }
 
 class PokemonList extends Array {
+  constructor(...args) {
+    let pokemons = [];
+    args.forEach(function(arg){
+      if (arg instanceof Pokemon) {
+        pokemons.push(arg);
+      }
+    });
+    super(...pokemons);
+  }
+
   add(name, level) {
     this.push(new Pokemon(name, level));
   }
@@ -29,14 +39,8 @@ class PokemonList extends Array {
   }
 
   max() {
-    let max_pokemon = -1;
-    this.forEach(curr_pokemon => {
-      if (max_pokemon < curr_pokemon) {
-        max_pokemon = curr_pokemon;
-      }
-    });
-
-    return max_pokemon;
+    let maxlevel = Math.max(...this);
+    return this.find(pokemon => pokemon.level === maxlevel);
   }
 
   removeByName(name) {
@@ -60,16 +64,21 @@ const pokemons = [
   new Pokemon('Aspiring Sorcerer', 39),
   new Pokemon('Chaos Cultist', 10),
   new Pokemon('Herald of Slaanesh', 69),
+  2.71828459045,
+  "hello world",
+  null,
 ];
 
 const lost = new PokemonList(...pokemons.slice(0, 8));
-const found = new PokemonList(...pokemons.slice(8, 10));
+const found = new PokemonList(...pokemons.slice(8, 13));
 
 let someFound = lost.removeByName('Chaos Defiler');
 found.add(someFound.name, someFound.level);
 
+
 console.log('---Lost PokemonList---');
 lost.show();
+
 console.log('---Found PokemonList---');
 found.show();
 
