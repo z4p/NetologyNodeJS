@@ -1,0 +1,41 @@
+<html>
+<head>
+    <title>Simple socket.io-based chat</title>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+
+    <div id="chat" style="height: 300px; width: 250px; background-color: #ddd; font-size: 8pt;"></div>
+
+    <form>
+        <input id="msgInput" type="text">
+        <input id="sendBtn" type="submit" value="Send">
+    </form>
+
+            
+    <script>
+        var nickname = prompt('Enter your nickname', 'Anonym');
+        var socket = io();
+        
+        socket.on('connect', function(){
+            socket.emit('rename', { name: nickname });
+        });
+        
+        socket.on('msg', function(data){
+            document.getElementById('chat').innerHTML += 
+                '<p>' + data.from + ': ' + data.text + '</p>';
+        });
+        
+        socket.on('new_user', function(data){
+            document.getElementById('chat').innerHTML += 
+                '<p><i>' + data.name + ' has connected to this chat</i></p>';
+        });
+        
+        document.getElementById('sendBtn').onclick = function(e){
+            e.preventDefault();
+            socket.emit('msg', { text: document.getElementById('msgInput').value });
+            document.getElementById('msgInput').value = "";
+        };
+    </script>
+</body>
+</html>
